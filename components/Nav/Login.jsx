@@ -6,6 +6,8 @@ import {
   View,
   TextInput,
   Dimensions,
+  KeyboardAvoidingView,
+  ScrollView,
   TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -61,7 +63,9 @@ const Login = () => {
   };
 
   return (
-    <SafeAreaView style={styles.loginContainer}>
+    <KeyboardAvoidingView style={styles.loginContainer} behavior="height">
+    <SafeAreaView >
+      <ScrollView KeyboardDismissMode='interactive' keyboardsHoldPersist='always' >
       <Logo />
       <View style={styles.loginCard}>
         <TextInput
@@ -79,11 +83,14 @@ const Login = () => {
         />
         <Button btnText={'Login'} onSubmit={signin} />
         {errorMsg && <ErrorMsg errorMsg={errorMsg} />}
-      </View>
       <TouchableOpacity onPress={register}>
         <Text style={styles.register}>Don't have an account? Register</Text>
       </TouchableOpacity>
+      </View>
+      </ScrollView>
     </SafeAreaView>
+    </KeyboardAvoidingView>
+
   );
 };
 
@@ -94,22 +101,23 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: '5%',
-    paddingVertical: '30%',
-    backgroundColor: '#fff',
+    paddingVertical: '5%',
+    backgroundColor: "lightgrey",
   },
   loginCard: {
     alignItems: 'center',
-    width: width,
-    marginTop: 20,
+    width: width-35,
+    marginTop: 10,
     position: 'relative',
   },
   loginInput: {
-    width: '80%',
+    width: '90%',
     marginBottom: 18,
     padding: 9,
     fontSize: 17,
     borderWidth: 1,
     borderRadius: 5,
+    backgroundColor: "white",
     borderColor: '#ccc9c9',
   },
   register: {
