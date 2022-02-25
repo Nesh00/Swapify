@@ -1,42 +1,39 @@
 import React, {useState, useEffect} from 'react';
-import { TouchableOpacity,Text, TextInput, View, ScrollView, StyleSheet} from 'react-native';
+import { TouchableOpacity,Text, TextInput, View, ScrollView, StyleSheet, FlatList} from 'react-native';
 import {auth, database} from '../firebase';
 import {collection, addDoc, query, serverTimestamp, orderBy} from 'firebase/firestore'
 import {Formik} from 'formik'
 import { getAuth } from 'firebase/auth';
 import Button from './Reusable/Button'
-
-const colRef = collection(database, 'messages');
+import { messageColRef } from "../firebase";
+import getMessages from '../utils/getMessages'
 
 const Messages = () => {
     const auth= getAuth();
     const user = auth.currentUser;
+    const [messages, setMessages] = useState([])
     
-    // const document = {
-    //     _id:2134,
-    //     itemId: 123,
-    //     ownerid:1234,
-    //     interestedPartyId:2345,
-    //     createdAt:'2022-02-24',
-    //     messages: [
-    //         {createdAt: '2022-02-24', senderId: 2345, message:"Hi there can I swap something for your banjo"},
-    //         {createdAt: '2022-02-24', senderId: 1234, message:"Sure, what do you have?"},
-    //     ]}
+    useEffect(() => {
+        getMessages().then((messagesFromDb) =>{
+          setMessages(messagesFromDb);
+        })
+    }, []);
+
     
     return (
-        <ScrollView>
+        
         <View style={{padding: 10}}>
             <Formik
             initialValues={{message: '',
-            username: user.displayName,
-            user_id: user.uid
         }}
             onSubmit={(values, actions)=>{
                 actions.resetForm();
-                addDoc(colRef, {username: values.username,
-                message: values.message,
-            user_id: values.user_id,
-            createdAt: serverTimestamp()}
+                addDoc(messageColRef, {item_id: 123,
+                    owner_id: 234,
+                    user_id: user.uid,
+                    createdAt: serverTimestamp(),
+                    username: user.displayName,
+                messages: [values.message, ...messages]}
             )
             }}>
                 {props => (<View><TextInput
@@ -46,7 +43,7 @@ const Messages = () => {
             value={props.values.message}/>
             <Button btnText={'Submit'} onSubmit={props.handleSubmit}/></View>)}
             
-            </Formik></View></ScrollView>
+            </Formik></View>
     )
 }
 
