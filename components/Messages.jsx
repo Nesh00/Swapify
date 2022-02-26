@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import {
   Image,
   Text,
-  ScrollView,
   TextInput,
   View,
   FlatList,
