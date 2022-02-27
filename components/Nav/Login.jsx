@@ -63,34 +63,39 @@ const Login = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.loginContainer} behavior="height">
-    <SafeAreaView >
-      <ScrollView KeyboardDismissMode='interactive' keyboardsHoldPersist='always' >
-      <Logo />
-      <View style={styles.loginCard}>
-        <TextInput
-          style={{ ...styles.loginInput }}
-          value={email}
-          placeholder='Email address'
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          style={styles.loginInput}
-          value={password}
-          placeholder='Password'
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry
-        />
-        <Button btnText={'Login'} onSubmit={signin} />
-        {errorMsg && <ErrorMsg errorMsg={errorMsg} />}
-      <TouchableOpacity onPress={register}>
-        <Text style={styles.register}>Don't have an account? Register</Text>
-      </TouchableOpacity>
-      </View>
-      </ScrollView>
-    </SafeAreaView>
-    </KeyboardAvoidingView>
+    <KeyboardAvoidingView style={styles.loginContainer} behavior='height'>
+      <SafeAreaView>
+        <ScrollView
+          KeyboardDismissMode='interactive'
+          keyboardsHoldPersist='always'
+        >
+          <Logo />
+          <View style={styles.loginCard}>
+            {errorMsg && <ErrorMsg errorMsg={errorMsg} />}
+            <TextInput
+              style={{ ...styles.loginInput }}
+              value={email}
+              placeholder='Email address'
+              onChangeText={(text) => setEmail(text)}
+            />
+            <TextInput
+              style={styles.loginInput}
+              value={password}
+              placeholder='Password'
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry
+            />
+            <Button btnText={'Login'} onSubmit={signin} />
 
+            <TouchableOpacity onPress={register}>
+              <Text style={styles.register}>
+                Don't have an account? Register
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -100,13 +105,12 @@ const styles = StyleSheet.create({
   loginContainer: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: '5%',
-    paddingVertical: '5%',
-    backgroundColor: "lightgrey",
+    padding: '5%',
+    backgroundColor: '#fff',
   },
   loginCard: {
     alignItems: 'center',
-    width: width-35,
+    width: width - 35,
     marginTop: 10,
     position: 'relative',
   },
@@ -117,7 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     borderWidth: 1,
     borderRadius: 5,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderColor: '#ccc9c9',
   },
   register: {

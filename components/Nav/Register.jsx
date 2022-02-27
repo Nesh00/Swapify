@@ -5,9 +5,7 @@ import {
   View,
   Text,
   TextInput,
-  Dimensions,
   Image,
-  Keyboard,
   KeyboardAvoidingView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -17,24 +15,15 @@ import Logo from '../Home/Logo';
 import Button from '../Reusable/Button';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth, upload } from '../../firebase';
-import { formatErrorMsg } from '../Error';
-
-const { width } = Dimensions.get('screen');
-
-const onTermsOfUsePressed = () => {
-  console.warn("Terms of Use");
-};
-
-const onPrivacyPolicyPressed = () => {
-  console.warn("Privacy Policy");
-};
+import { formatErrorMsg } from '../../utils/formatErrorMsg';
+import { ErrorMsg } from '../Error';
 
 const Register = () => {
   const navigation = useNavigation();
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [password2, setPassword2] = useState('');
   const [errorMsg, setErrorMsg] = useState(null);
   const [signupDetails, setSignupDetails] = useState(null);
   const [image, setImage] = useState(null);
@@ -55,7 +44,7 @@ const Register = () => {
 
   const submitHandler = () => {
     if (password2 !== password) {
-      console.log("Passwords do not match");
+      setErrorMsg('Passwords do not match');
     } else {
       setSignupDetails({
         email: email,
@@ -63,6 +52,14 @@ const Register = () => {
         password: password,
       });
     }
+  };
+
+  const onTermsOfUsePressed = () => {
+    navigation.navigate('User Agreement');
+  };
+
+  const onPrivacyPolicyPressed = () => {
+    navigation.navigate('Privacy');
   };
 
   useEffect(() => {
@@ -79,68 +76,72 @@ const Register = () => {
           image && upload(image, auth.currentUser, setIsLoading);
         })
         .then(() => {
-          navigation.navigate("Login");
+          navigation.navigate('Login');
         })
         .catch((err) => {
-          console.log(err);
+          setErrorMsg(formatErrorMsg(err.message));
         });
   }, [signupDetails, image]);
 
   return (
-    <KeyboardAvoidingView style={styles.registerContainer} behavior="height">
-    <SafeAreaView >
-      <ScrollView KeyboardDismissMode='interactive' keyboardsHoldPersist='always' >
-      <Logo />
-      <View style={styles.loginCard}>
-        <TextInput
-          value={username}
-          style={styles.loginInput}
-          placeholder="Username"
-          onChangeText={(text) => setUsername(text)}
-        />
-        <TextInput
-          value={email}
-          style={styles.loginInput}
-          placeholder="E-mail"
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          value={password}
-          style={styles.loginInput}
-          placeholder="Enter Password"
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry
-        />
-        <TextInput
-          value={password2}
-          style={styles.loginInput}
-          placeholder="Re-enter Password"
-          onChangeText={(text) => setPassword2(text)}
-          secureTextEntry
-        />
-        {image ? (
-          <Image style={styles.displayPic} source={{ uri: image }} />
-        ) : null}
-        <Button
-          btnText={!image ? "Pick a display photo" : "Change photo"}
-          onSubmit={pickImage}
-        />
-      {username && email && password && password2 ? (
-        <Button btnText={"Submit"} onSubmit={submitHandler} />
-      ) : null}
-      <Text style={styles.text}>
-        By registering, you confirm that you accept our{' '} 
-        <Text style={styles.link} onPress={onTermsOfUsePressed}>
-          Terms of Use{' '}
-        </Text>
-        and{' '}
-        <Text style={styles.link} onPress={onPrivacyPolicyPressed}>
-          Privacy Policy
-        </Text>
-      </Text>
-      </View>
-    </ScrollView>
-    </SafeAreaView>
+    <KeyboardAvoidingView style={styles.registerContainer} behavior='height'>
+      <SafeAreaView>
+        <ScrollView
+          KeyboardDismissMode='interactive'
+          keyboardsHoldPersist='always'
+        >
+          <Logo />
+          <View style={styles.loginCard}>
+            {errorMsg && <ErrorMsg errorMsg={errorMsg} />}
+            <TextInput
+              value={username}
+              style={styles.loginInput}
+              placeholder='Username'
+              onChangeText={(text) => setUsername(text)}
+            />
+            <TextInput
+              value={email}
+              style={styles.loginInput}
+              placeholder='E-mail'
+              onChangeText={(text) => setEmail(text)}
+            />
+            <TextInput
+              value={password}
+              style={styles.loginInput}
+              placeholder='Enter Password'
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry
+            />
+            <TextInput
+              value={password2}
+              style={styles.loginInput}
+              placeholder='Re-enter Password'
+              onChangeText={(text) => setPassword2(text)}
+              secureTextEntry
+            />
+            {image ? (
+              <Image style={styles.displayPic} source={{ uri: image }} />
+            ) : null}
+            <Button
+              btnText={!image ? 'Pick a display photo' : 'Change photo'}
+              onSubmit={pickImage}
+            />
+            {username && email && password && password2 ? (
+              <Button btnText={'Submit'} onSubmit={submitHandler} />
+            ) : null}
+            <Text style={styles.text}>
+              By registering, you confirm that you accept our{' '}
+              <Text style={styles.link} onPress={onTermsOfUsePressed}>
+                Terms of Use{' '}
+              </Text>
+              and{' '}
+              <Text style={styles.link} onPress={onPrivacyPolicyPressed}>
+                Privacy Policy
+              </Text>
+            </Text>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
@@ -150,15 +151,12 @@ export default Register;
 const styles = StyleSheet.create({
   registerContainer: {
     flex: 1,
-    alignItems: "center",
-    paddingHorizontal: "5%",
-    paddingVertical: "5%",
-    backgroundColor: "lightgrey",
+    alignItems: 'center',
+    paddingHorizontal: '5%',
+    backgroundColor: '#fff',
   },
   loginCard: {
     alignItems: 'center',
-    width: width-35,
-    marginTop: 10,
   },
   loginInput: {
     width: '90%',
@@ -167,21 +165,21 @@ const styles = StyleSheet.create({
     fontSize: 17,
     borderWidth: 1,
     borderRadius: 5,
-    backgroundColor: "white",
-    borderColor: "#ccc9c9",
+    borderColor: '#ccc9c9',
   },
   text: {
-    color: "grey",
     marginVertical: 10,
+    textAlign: 'center',
+    color: '#808080',
   },
   link: {
-    color: "red",
+    color: '#ff0000',
   },
   displayPic: {
     height: 100,
     width: 100,
     marginBottom: 10,
-    borderColor: "blue",
+    borderColor: '#0000ff',
     borderWidth: 2,
     borderRadius: 50,
   },

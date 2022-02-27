@@ -6,6 +6,6 @@ export const dateFormatter = (date) => {
     month: 'long',
     day: 'numeric',
   };
-
   return newDate.toLocaleDateString('en-UK', options);
 };
+

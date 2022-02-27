@@ -37,11 +37,11 @@ const Nav = () => {
           <MaterialIcons name='message' size={24} color='#6b6565' />
         </TouchableOpacity>
         <TouchableOpacity onPress={menuOpenHandler}>
-          <Ionicons
-            name='ios-menu-sharp'
-            size={30}
-            color={isPressed ? '#d73737' : '#6b6565'}
-          />
+          {!isPressed ? (
+            <Ionicons name='ios-menu-sharp' size={30} color='#6b6565' />
+          ) : (
+            <Ionicons name='close-sharp' size={30} color='#6b6565' />
+          )}
         </TouchableOpacity>
       </View>
       <Menu navigationHandler={navigationHandler} isPressed={isPressed} />
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 15,
     paddingHorizontal: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.01)',
+    backgroundColor: '#f7f7f7',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc9c9',
   },

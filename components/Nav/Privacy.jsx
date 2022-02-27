@@ -181,8 +181,7 @@ export default Privacy;
 const styles = StyleSheet.create({
   legalContainer: {
     flex: 1,
-    paddingTop: '5%',
-    paddingHorizontal: '3%',
+    padding: '5%',
     backgroundColor: '#fff',
   },
   legalHeader: {

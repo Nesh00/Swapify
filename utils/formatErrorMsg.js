@@ -1,5 +1,7 @@
 export const formatErrorMsg = (errMsg) => {
-  return `Error: ${errMsg
+  const message = errMsg
     .replace(/-/g, ' ')
-    .slice(errMsg.lastIndexOf('/') + 1, -2)}`;
+    .slice(errMsg.lastIndexOf('/') + 1, -2);
+
+  return message[0].toUpperCase() + message.slice(1);
 };

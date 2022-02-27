@@ -9,12 +9,9 @@ export const ErrorMsg = ({ errorMsg }) => {
 };
 
 const styles = StyleSheet.create({
-  errorMsgContainer: {
-    position: 'absolute',
-    bottom: '-10%',
-  },
   errorMsg: {
+    marginBottom: 5,
     fontSize: 15,
-    color: 'red',
+    color: '#ff0000',
   },
 });

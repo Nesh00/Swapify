@@ -10,6 +10,7 @@ import {
 import { Fontisto } from '@expo/vector-icons';
 import React, { useState, useEffect } from 'react';
 import  getItems from '../../utils/getItems';
+import formatTimestamp from '../../utils/formatTimestamp';
 
 const { width } = Dimensions.get('screen');
 const imageW = width * 0.44;
@@ -43,7 +44,7 @@ const VerticalList = ({category}) => {
             <View style={styles.itemDetails}>
               <Text style={styles.itemHeader}>{item.title}</Text>
               <Text>{item.description}</Text>
-              <Text>{item.posted_at}</Text>
+              <Text>{formatTimestamp(item.posted_at)}</Text>
               <Text>{item.username}</Text>
               <View style={styles.itemFooter}>
                 <TouchableOpacity>
