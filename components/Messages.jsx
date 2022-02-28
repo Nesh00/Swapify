@@ -72,11 +72,11 @@ const Messages = ({ route }) => {
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item }) => {
             return (
-              <View style={styles.itemCard}>
+              <View style={styles.messageCard}>
                 <View style={styles.messageDetail}>
-                  <Text>User: {item?.username}</Text>
-                  <Text>Sent on: {dateFormatter(item?.createdAt)}</Text>
+                  <Text>From: {item?.username}</Text>
                   <Text style={styles.messageText}>{item?.message}</Text>
+                  <Text>Sent: {dateFormatter(item?.createdAt)}</Text>
                 </View>
               </View>
             );
@@ -159,6 +159,16 @@ var styles = StyleSheet.create({
     borderColor: '#ccc9c9',
     overflow: 'hidden',
     alignItems: 'center',
+  },
+  messageCard: {
+    flexDirection: 'row',
+    marginBottom: 5,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#ccc9c9',
+    overflow: 'hidden',
+    alignItems: 'center',
+    backgroundColor: '#ddd'
   },
   itemImg: {
     width: 50,
