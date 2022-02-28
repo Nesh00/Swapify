@@ -34,7 +34,6 @@ const Messages = ({ route }) => {
   };
 
   useEffect(() => {
-    console.log(messageDocId);
     getMessage(messageDocId).then((messageDoc) => {
       messageDoc ? setMessage(messageDoc) : setMessage(newDoc);
     });
