@@ -162,9 +162,9 @@ var styles = StyleSheet.create({
   },
   messageCard: {
     flexDirection: 'row',
-    marginBottom: 5,
+    marginBottom: 10,
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 8,
     borderColor: '#ccc9c9',
     overflow: 'hidden',
     alignItems: 'center',
