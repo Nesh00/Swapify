@@ -17,9 +17,10 @@ const imageH = imageW * 1.1;
 
 const MessageList = ({ navigation, category }) => {
   const [items, setItems] = useState([]);
+  const [sortBy, setSortBy] = useState('posted_at desc');
 
   useEffect(() => {
-    getItems(category).then((itemsFromDb) => {
+    getItems(category, sortBy).then((itemsFromDb) => {
       setItems(itemsFromDb);
     });
   }, [category]);
