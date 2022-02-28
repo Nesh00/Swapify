@@ -11,7 +11,7 @@ import Marketplace from "../components/Marketplace";
 import Privacy from "../components/Nav/Privacy";
 import AddItem from "../components/User/AddItem";
 import CameraPage from "../components/CameraPage";
-import MessageList from "../components/MesssageList";
+import MessageList from "../components/MessageList";
 
 const Stack = createNativeStackNavigator();
 
