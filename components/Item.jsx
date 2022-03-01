@@ -1,20 +1,36 @@
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
-import Button from './Reusable/Button';
-import { auth } from '../firebase';
-import formattedTimestamp from '../utils/formatTimestamp';
-import { useNavigation } from '@react-navigation/native';
-import deleteItem from '../utils/deleteItem';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import Button from "./Reusable/Button";
+import { auth } from "../firebase";
+import formattedTimestamp from "../utils/formatTimestamp";
+import { useNavigation } from "@react-navigation/native";
+import deleteItem from "../utils/deleteItem";
+import { MaterialIcons } from "@expo/vector-icons";
+import { getMyItemMessageId } from "../utils/messageQueries";
 
 const Item = ({ route }) => {
   const navigation = useNavigation();
   const item = route.params;
   const [id, setId] = useState(item.id);
+  const [messageDocId, setMessageDocId] = useState(null);
 
   const deleteItemHandler = async () => {
     deleteItem(id);
     // navigation.navigate('My List');
   };
+
+  useEffect(() => {
+    getMyItemMessageId(id, auth.currentUser.displayName).then((docId) => {
+      setMessageDocId(docId);
+    });
+  }, []);
 
   return (
     <SafeAreaView style={styles.itemContainer}>
@@ -26,9 +42,22 @@ const Item = ({ route }) => {
         <Text>{formattedTimestamp(item.posted_at)}</Text>
       </View>
       {auth.currentUser.displayName === item.username ? (
-        <Button btnText={'Delete Item'} onSubmit={deleteItemHandler} />
+        <Button btnText={"Delete Item"} onSubmit={deleteItemHandler} />
       ) : (
-        <Button btnText={'Offer Swap'} />
+        // <Button btnText={'Offer Swap'} onSubmit={()=>{navigation.navigate('Conversation', {
+        //   item: item,
+        // })}}/>
+        <TouchableOpacity
+          style={styles.itemButton}
+          onPress={() =>
+            navigation.navigate("Conversation", {
+              messageDocId: messageDocId,
+              item: item,
+            })
+          }
+        >
+          <MaterialIcons name="message" size={24} color="#6b6565" />
+        </TouchableOpacity>
       )}
       <Text style={styles.itemDescription}>{item.description}</Text>
     </SafeAreaView>
@@ -40,19 +69,19 @@ export default Item;
 const styles = StyleSheet.create({
   itemContainer: {
     flex: 1,
-    padding: '5%',
-    backgroundColor: '#fff',
+    padding: "5%",
+    backgroundColor: "#fff",
   },
   itemImage: {
-    width: '100%',
-    height: '30%',
+    width: "100%",
+    height: "30%",
     borderRadius: 5,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     borderWidth: 1,
-    borderColor: '#ccc9c9',
+    borderColor: "#ccc9c9",
   },
   itemTitle: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 20,
     marginBottom: 10,
     fontSize: 28,
@@ -60,13 +89,13 @@ const styles = StyleSheet.create({
   itemCategory: {
     marginBottom: 60,
     fontSize: 18,
-    textAlign: 'center',
-    fontStyle: 'italic',
+    textAlign: "center",
+    fontStyle: "italic",
   },
   swapContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 15,
   },
   itemUsername: {
@@ -76,8 +105,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 20,
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     borderRadius: 5,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: "#f7f7f7",
   },
 });
