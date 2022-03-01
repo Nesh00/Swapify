@@ -44,20 +44,26 @@ const Item = ({ route }) => {
       {auth.currentUser.displayName === item.username ? (
         <Button btnText={"Delete Item"} onSubmit={deleteItemHandler} />
       ) : (
-        // <Button btnText={'Offer Swap'} onSubmit={()=>{navigation.navigate('Conversation', {
-        //   item: item,
-        // })}}/>
-        <TouchableOpacity
-          style={styles.itemButton}
-          onPress={() =>
+        <Button
+          btnText={"Offer Swap"}
+          onSubmit={() =>
             navigation.navigate("Conversation", {
               messageDocId: messageDocId,
               item: item,
             })
           }
-        >
-          <MaterialIcons name="message" size={24} color="#6b6565" />
-        </TouchableOpacity>
+        />
+        // <TouchableOpacity
+        //   style={styles.itemButton}
+        // onPress={() =>
+        //   navigation.navigate("Conversation", {
+        //     messageDocId: messageDocId,
+        //     item: item,
+        //   })
+        // }
+        // >
+        //   <MaterialIcons name="message" size={24} color="#6b6565" />
+        // </TouchableOpacity>
       )}
       <Text style={styles.itemDescription}>{item.description}</Text>
     </SafeAreaView>
