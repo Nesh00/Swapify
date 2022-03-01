@@ -2,8 +2,8 @@ import { StyleSheet, Text, SafeAreaView, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useState, useEffect } from 'react';
 import { Fontisto } from '@expo/vector-icons';
-import VerticalList from './Reusable/VerticalList';
-import getCategories from '../utils/getCategories';
+import VerticalList from '../Reusable/VerticalList';
+import getCategories from '../../utils/getCategories';
 
 const Marketplace = () => {
   const [categories, setCategories] = useState(['All']);

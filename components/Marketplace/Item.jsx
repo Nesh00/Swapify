@@ -1,47 +1,70 @@
+import { useNavigation } from "@react-navigation/native";
+import { useContext, useState, useEffect } from "react";
 import {
   Image,
   SafeAreaView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
+  View,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import Button from "./Reusable/Button";
-import { auth } from "../firebase";
-import formattedTimestamp from "../utils/formatTimestamp";
-import { useNavigation } from "@react-navigation/native";
-import deleteItem from "../utils/deleteItem";
-import { MaterialIcons } from "@expo/vector-icons";
-import { getMyItemMessageId } from "../utils/messageQueries";
+import { UserContext } from "../../contexts/UserContext";
+import { dateFormatter } from "../../utils/dateFormatter";
+import { auth } from "../../firebase";
+import Loader from "../Reusable/Loader";
+import deleteItem from "../../utils/deleteItem";
+import { getMyItemMessageId } from "../../utils/messageQueries";
+import Button from "../Reusable/Button";
 
 const Item = ({ route }) => {
   const navigation = useNavigation();
   const item = route.params;
   const [id, setId] = useState(item.id);
   const [messageDocId, setMessageDocId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { isLoggedIn } = useContext(UserContext);
 
   const deleteItemHandler = async () => {
-    deleteItem(id);
-    // navigation.navigate('My List');
+    setLoading(true);
+    await deleteItem(id)
+      .then(() => {
+        navigation.navigate("My List");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setLoading(false);
+  };
+
+  const goToLoginHandler = () => {
+    navigation.navigate("Login");
   };
 
   useEffect(() => {
     getMyItemMessageId(id, auth.currentUser.displayName).then((docId) => {
       setMessageDocId(docId);
     });
-  }, []);
+  }, [id]);
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <SafeAreaView style={styles.itemContainer}>
       <Image style={styles.itemImage} source={{ uri: item.img }} />
       <Text style={styles.itemTitle}>{item.title}</Text>
       <Text style={styles.itemCategory}>{item.category}</Text>
       <View style={styles.swapContainer}>
         <Text style={styles.itemUsername}>{item.username}</Text>
-        <Text>{formattedTimestamp(item.posted_at)}</Text>
+        <Text>{dateFormatter(item.posted_at)}</Text>
       </View>
-      {auth.currentUser.displayName === item.username ? (
+      {!isLoggedIn ? (
+        <TouchableOpacity onPress={goToLoginHandler}>
+          <Text style={styles.register}>
+            Please login or register to offer swap
+          </Text>
+        </TouchableOpacity>
+      ) : auth.currentUser.displayName === item.username ? (
         <Button btnText={"Delete Item"} onSubmit={deleteItemHandler} />
       ) : (
         <Button
@@ -80,7 +103,7 @@ const styles = StyleSheet.create({
   },
   itemImage: {
     width: "100%",
-    height: "30%",
+    height: "35%",
     borderRadius: 5,
     resizeMode: "cover",
     borderWidth: 1,
@@ -114,5 +137,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     borderRadius: 5,
     backgroundColor: "#f7f7f7",
+  },
+  register: {
+    marginVertical: 10,
+    fontSize: 17,
+    textAlign: "center",
+    color: "#0000ff",
   },
 });

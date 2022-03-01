@@ -15,6 +15,8 @@ import { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import { auth } from '../../firebase';
 import { deleteUser } from 'firebase/auth';
+import getItems from '../../utils/getItems';
+import deleteItem from '../../utils/deleteItem';
 
 const { width } = Dimensions.get('screen');
 const menuW = width * 0.5;
@@ -43,10 +45,17 @@ const User = () => {
         {
           text: 'yep, delete',
           onPress: () =>
-            deleteUser(auth.currentUser)
+            getItems('All', 'posted_at desc', auth.currentUser.displayName)
+              .then((items) => {
+                setLoading(true);
+                items.forEach((item) => deleteItem(item.id));
+              })
               .then(() => {
+                deleteUser(auth.currentUser);
+              })
+              .then(() => {
+                Alert.alert('Success', 'Account deleted successfully');
                 navigation.navigate('Home');
-                console.log('account deleted');
               })
               .catch((err) => {
                 console.log(err);

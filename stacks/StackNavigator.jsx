@@ -7,12 +7,12 @@ import UserList from '../components/User/UserList';
 import UserSwaps from '../components/User/UserSwaps';
 import Messages from '../components/Messages';
 import UserAgreement from '../components/Nav/UserAgreement';
-import Marketplace from '../components/Marketplace';
+import Marketplace from '../components/Marketplace/Marketplace';
+import Item from '../components/Marketplace/Item';
 import Privacy from '../components/Nav/Privacy';
 import AddItem from '../components/User/AddItem';
 import CameraPage from '../components/CameraPage';
 import MessageList from '../components/MessageList';
-import Item from '../components/Item';
 
 const Stack = createNativeStackNavigator();
 

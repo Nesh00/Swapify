@@ -18,6 +18,7 @@ import { auth } from '../../firebase';
 import { UserContext } from '../../contexts/UserContext';
 import { ErrorMsg } from '../Error';
 import { formatErrorMsg } from '../../utils/formatErrorMsg';
+import Loader from '../Reusable/Loader';
 
 const { width } = Dimensions.get('screen');
 
@@ -26,6 +27,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState(null);
   const [loginDetails, setLoginDetails] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const { setLoggedInUser } = useContext(UserContext);
   const navigation = useNavigation();
 
@@ -43,6 +45,11 @@ const Login = () => {
         loginDetails.password
       )
         .then((userCredentials) => {
+          setIsLoaded(true);
+
+          return userCredentials;
+        })
+        .then((userCredentials) => {
           isMounted && setLoggedInUser(userCredentials);
           navigation.navigate('Home');
           setEmail('');
@@ -55,6 +62,7 @@ const Login = () => {
 
     return () => {
       isMounted = false;
+      setIsLoaded(false);
     };
   }, [loginDetails]);
 
@@ -62,7 +70,9 @@ const Login = () => {
     navigation.navigate('Register');
   };
 
-  return (
+  return isLoaded ? (
+    <Loader />
+  ) : (
     <KeyboardAvoidingView style={styles.loginContainer} behavior='height'>
       <SafeAreaView>
         <ScrollView

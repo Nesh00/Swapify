@@ -1,5 +1,4 @@
 import { onSnapshot } from 'firebase/firestore';
-import { query, where } from 'firebase/firestore';
 import collectionRef from '../firebase';
 
 const getCategories = () => {

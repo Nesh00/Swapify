@@ -1,28 +1,28 @@
-// import * as React from 'react';
 import React, { useState, useEffect } from 'react';
 import getMostRecentItems from '../../utils/getMostRecentItems';
 import {
-  StatusBar,
   FlatList,
   Image,
   Text,
   View,
   Dimensions,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const { width, height } = Dimensions.get('screen');
+const { width } = Dimensions.get('screen');
 const imageW = width * 0.5;
 const imageH = imageW * 1.1;
 
 const ItemsSlider = () => {
-
-  const [ recentItems, setRecentItems ] = useState([]); 
+  const navigation = useNavigation();
+  const [recentItems, setRecentItems] = useState([]);
   useEffect(() => {
     getMostRecentItems().then((itemsFromDb) => {
       setRecentItems(itemsFromDb);
-    })
-}, []);
+    });
+  }, []);
 
   return (
     <View style={styles.listContainer}>
@@ -38,11 +38,15 @@ const ItemsSlider = () => {
         renderItem={({ item }) => {
           return (
             <View style={styles.itemCard}>
-              <Image source={{uri: item.img}} style={styles.itemImg} />
-              <View style={styles.itemDescriptionContainer}>
-                <Text style={styles.itemTitle}>{item.title}</Text>
-                <Text style={styles.itemTitle}>{item.username}</Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Item', { ...item })}
+              >
+                <Image source={{ uri: item.img }} style={styles.itemImg} />
+                <View style={styles.itemDescriptionContainer}>
+                  <Text style={styles.itemTitle}>{item.title}</Text>
+                  <Text style={styles.itemTitle}>{item.username}</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           );
         }}
@@ -67,7 +71,6 @@ const styles = StyleSheet.create({
     marginRight: 20,
     borderRadius: 10,
     overflow: 'hidden',
-    elevation: 3,
   },
   itemImg: {
     width: imageW,
@@ -77,14 +80,15 @@ const styles = StyleSheet.create({
   },
   itemDescriptionContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 44,
     justifyContent: 'center',
     alignItems: 'center',
     width: imageW,
     height: 40,
-    backgroundColor: 'rgba(255, 255, 255, .3)',
+    backgroundColor: 'rgba(255, 255, 255, .5)',
   },
   itemTitle: {
-    color: '#fff',
+    color: '#393737',
+    fontWeight: '700',
   },
 });

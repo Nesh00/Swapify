@@ -1,9 +1,6 @@
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from 'react-native';
 import Logo from './Logo';
 import ItemsSlider from './ItemsSlider';
-import AddItem from '../User/AddItem';
-import DeleteItem from '../User/DeleteItem';
-import { useState } from 'react';
 
 const Home = () => {
   return (
@@ -12,8 +9,6 @@ const Home = () => {
         <StatusBar default />
         <Logo />
         <ItemsSlider />
-        {/* <DeleteItem /> */}
-        {/* <AddItem /> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -23,6 +18,7 @@ export default Home;
 const styles = StyleSheet.create({
   homeContainer: {
     flex: 1,
+    paddingVertical: '5%',
     backgroundColor: '#fff',
   },
 });

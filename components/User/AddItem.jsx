@@ -1,5 +1,6 @@
 import { Picker } from '@react-native-picker/picker';
 import {
+  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -9,13 +10,33 @@ import {
 } from 'react-native';
 import { Formik } from 'formik';
 import { useState, useEffect } from 'react';
-import postItem from '../../utils/postItem';
 import getCategories from '../../utils/getCategories';
 import { serverTimestamp } from 'firebase/firestore';
-import { auth } from '../../firebase';
+import { auth, uploadItemImg } from '../../firebase';
+import * as ImagePicker from 'expo-image-picker';
+import Button from '../Reusable/Button';
+import postItem from '../../utils/postItem';
+import { useNavigation } from '@react-navigation/native';
+import Loader from '../Reusable/Loader';
 
 const AddItem = () => {
+  const navigation = useNavigation();
   const [categories, setCategories] = useState([]);
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [counter, setCounter] = useState(1);
+
+  const pickImage = () => {
+    ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    }).then((result) => {
+      if (!result.cancelled) {
+        setImage(result.uri);
+      }
+    });
+  };
 
   useEffect(() => {
     getCategories().then((categoriesFromDb) => {
@@ -23,41 +44,42 @@ const AddItem = () => {
     });
   }, []);
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <SafeAreaView style={styles.addItemContainer}>
       <Formik
-        initialValues={{ title: '', img: '', description: '', category: '' }}
+        initialValues={{ title: '', image, description: '', category: '' }}
         onSubmit={(values, actions) => {
           actions.resetForm();
           values.posted_at = serverTimestamp();
           values.username = auth.currentUser.displayName;
-          postItem(values);
+
+          values.title &&
+            values.description &&
+            values.category &&
+            image &&
+            uploadItemImg(
+              counter,
+              image,
+              auth.currentUser,
+              setLoading,
+              values.title
+            )
+              .then((photoURL) => {
+                postItem(values, photoURL);
+                setCounter((currCount) => currCount + 1);
+                setLoading(false);
+                return photoURL;
+              })
+              .then((photoURL) =>
+                navigation.navigate('Item', { ...values, img: photoURL })
+              );
         }}
       >
         {(props) => (
           <View style={styles.form}>
             <Text style={styles.formHeader}>Add your listing below</Text>
-            <Text style={styles.label}>Title</Text>
-            <TextInput
-              placeholder='Tell us what you are listing...'
-              style={styles.input}
-              value={props.values.title}
-              onChangeText={props.handleChange('title')}
-            />
-            <Text style={styles.label}>Image URL:</Text>
-            <TextInput
-              placeholder='Paste in your image URL...'
-              style={styles.input}
-              value={props.values.img}
-              onChangeText={props.handleChange('img')}
-            />
-            <Text style={styles.label}>Description:</Text>
-            <TextInput
-              placeholder={'Tell us a bit about your item...'}
-              style={styles.input}
-              value={props.values.description}
-              onChangeText={props.handleChange('description')}
-            />
             <Text style={styles.label}>Please select a category:</Text>
             <Picker
               enabled={true}
@@ -75,6 +97,27 @@ const AddItem = () => {
                 );
               })}
             </Picker>
+            <Text style={styles.label}>Title</Text>
+            <TextInput
+              placeholder='Tell us what you are listing...'
+              style={styles.input}
+              value={props.values.title}
+              onChangeText={props.handleChange('title')}
+            />
+            <Text style={styles.label}>Description:</Text>
+            <TextInput
+              placeholder={'Tell us a bit about your item...'}
+              style={styles.input}
+              value={props.values.description}
+              onChangeText={props.handleChange('description')}
+            />
+            <Button
+              btnText={!image ? 'Add photo' : 'Change photo'}
+              onSubmit={pickImage}
+            />
+            {image ? (
+              <Image style={styles.displayPic} source={{ uri: image }} />
+            ) : null}
             <TouchableOpacity
               style={styles.submitBtn}
               onPress={props.handleSubmit}
@@ -125,5 +168,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     textAlign: 'center',
+  },
+  displayPic: {
+    alignSelf: 'center',
+    height: 130,
+    width: 130,
+    marginVertical: 10,
+    borderColor: '#0000ff',
+    borderWidth: 2,
+    borderRadius: 5,
   },
 });
