@@ -52,5 +52,5 @@ export const getMyItemMessageId = async (item_id, username) => {
     where("username", "==", username)
   );
   const querySnapshot = await getDocs(q);
-  return querySnapshot?.docs ? querySnapshot.docs[0].id : null;
+  return querySnapshot?.docs ? querySnapshot.docs[0]?.id : null;
 };

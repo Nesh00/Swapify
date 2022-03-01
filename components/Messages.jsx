@@ -17,7 +17,7 @@ import { getMessage } from "../utils/messageQueries";
 import Button from "./Reusable/Button";
 import { StyleSheet } from "react-native";
 import { useRef } from "react";
-import { dateFormatter } from "../utils/dateFormatter";
+import { isoDateFormatter } from "../utils/dateFormatter";
 const now = new Date();
 const Messages = ({ route }) => {
   const { messageDocId, item } = route.params;
@@ -40,7 +40,7 @@ const Messages = ({ route }) => {
     } else {
       setMessage(newDoc);
     }
-  }, []);
+  }, [messageDocId, item]);
   const scrollRef = useRef(null);
   return (
     <KeyboardAvoidingView
@@ -83,7 +83,7 @@ const Messages = ({ route }) => {
                 <View style={styles.messageDetail}>
                   <Text>From: {item?.username}</Text>
                   <Text style={styles.messageText}>{item?.message}</Text>
-                  <Text>Sent: {dateFormatter(item?.createdAt)}</Text>
+                  <Text>Sent: {isoDateFormatter(item?.createdAt)}</Text>
                 </View>
               </View>
             );

@@ -6,11 +6,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import { getMyMessagesItems } from "../utils/messageQueries";
 import { getAuth } from "firebase/auth";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("screen");
 const imageW = width * 0.2;
@@ -39,14 +41,11 @@ const MessageList = ({ navigation, category }) => {
   }, [category, sortBy]);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Text style={styles.msgHeader}>Giving away...</Text>
       <FlatList
         data={messages1}
-        pagingEnabled
-        style={{ alignSelf: "stretch" }}
         decelerationRate={0}
-        snapToInterval={imageH + 20}
         showsVerticalScrollIndicator={false}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => {
@@ -75,14 +74,11 @@ const MessageList = ({ navigation, category }) => {
             </View>
           );
         }}
-      ></FlatList>
+      />
       <Text style={styles.msgHeader}>Interested in...</Text>
       <FlatList
         data={messages2}
-        pagingEnabled
-        style={{ alignSelf: "stretch" }}
         decelerationRate={0}
-        snapToInterval={imageH + 20}
         showsVerticalScrollIndicator={false}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => {
@@ -111,7 +107,7 @@ const MessageList = ({ navigation, category }) => {
             </View>
           );
         }}
-      ></FlatList>
+      />
     </View>
   );
 };
