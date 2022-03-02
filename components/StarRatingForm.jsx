@@ -3,7 +3,8 @@ import { SafeAreaView,StyleSheet, Text, View, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import sendRatingToUser from '../utils/sendRatingToUser';
 
-const StarRatingForm = ({username}) => {
+const StarRatingForm = ({route}) => {
+    const username = route.params.username;
     const [ rating, setRating ] = useState(0);
     const [ maxRating, setMaxRating ] = useState([1, 2, 3, 4, 5]);
 

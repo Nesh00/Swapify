@@ -8,6 +8,7 @@ const UserList = () => {
   const navigation = useNavigation();
 
   const navigationHandler = (screen) => {
+    console.log(screen)
     navigation.navigate(screen);
   };
 

@@ -11,7 +11,7 @@ const Home = () => {
         <StatusBar default />
         <Logo />
         <ItemsSlider />
-        <StarRatingForm username={'beanPinto'}/>
+        {/* <StarRatingForm username={'beanPinto'}/> */}
       </ScrollView>
     </SafeAreaView>
   );
