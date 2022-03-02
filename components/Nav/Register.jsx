@@ -26,6 +26,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
+  const [location, setLocation] = useState('')
   const [errorMsg, setErrorMsg] = useState(null);
   const [signupDetails, setSignupDetails] = useState(null);
   const [image, setImage] = useState(null);
@@ -127,6 +128,13 @@ const Register = () => {
               placeholder='Re-enter Password'
               onChangeText={(text) => setPassword2(text)}
               secureTextEntry
+            />
+            <TextInput
+              value={location}
+              style={styles.loginInput}
+              placeholder='Current city'
+              onChangeText={(text) => setLocation(text)}
+              
             />
             {image ? (
               <Image style={styles.displayPic} source={{ uri: image }} />

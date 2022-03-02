@@ -10,7 +10,7 @@ const Loader = (loadingText) => {
       animationStyle={styles.lottie}
       speed={1}
     >
-      <Text>Account is being registered</Text>
+      <Text>Hold on...</Text>
     </AnimatedLoader>
   );
 };
