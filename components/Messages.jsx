@@ -2,6 +2,7 @@ import { getAuth } from "firebase/auth";
 import { addDoc, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   Image,
   Text,
@@ -10,7 +11,9 @@ import {
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
+  TouchableOpacity,
   Platform,
+  Modal,
 } from "react-native";
 import { messageColRef } from "../firebase";
 import { getMessage } from "../utils/messageQueries";
@@ -18,7 +21,10 @@ import Button from "./Reusable/Button";
 import { StyleSheet } from "react-native";
 import { useRef } from "react";
 import { isoDateFormatter } from "../utils/dateFormatter";
+import AverageStarRating from "./AverageStarRating";
+import StarRating from "./StarRatingForm";
 const now = new Date();
+
 const Messages = ({ route }) => {
   const { messageDocId, item } = route.params;
   const auth = getAuth();
@@ -31,7 +37,8 @@ const Messages = ({ route }) => {
     messages: [],
     item: item,
   };
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation();
   useEffect(() => {
     if (messageDocId) {
       getMessage(messageDocId).then((messageDoc) => {
@@ -42,27 +49,37 @@ const Messages = ({ route }) => {
     }
   }, [messageDocId, item]);
   const scrollRef = useRef(null);
+  console.log(item);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <View style={styles.container}>
-        <View>
-          <View style={styles.itemCard}>
+        {message?.item?.username && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Item", { ...message.item })}
+          >
             <View>
-              <Image
-                source={{ uri: message?.item?.img }}
-                style={styles.itemImg}
-              />
-            </View>
-            <View style={styles.itemDetail}>
-              <Text style={styles.itemName}>{message?.item?.title}</Text>
-              <Text>Owner: {message?.item?.username}</Text>
-            </View>
-          </View>
-        </View>
+              <View style={styles.itemCard}>
+                <View>
+                  <Image
+                    source={{ uri: message?.item?.img }}
+                    style={styles.itemImg}
+                  />
+                </View>
+                <View style={styles.itemDetail}>
+                  <Text style={styles.itemName}>{message?.item?.title}</Text>
+                  <View>
+                    <Text>Owner: {message?.item?.username}</Text>
 
+                    <AverageStarRating user={message?.item?.username} />
+                  </View>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
         <FlatList
           ref={scrollRef}
           onContentSizeChange={() =>
@@ -120,32 +137,65 @@ const Messages = ({ route }) => {
               }}
             >
               {(props) => (
-                <View style={{ alignItems: "center" }}>
-                  <TextInput
-                    style={{
-                      borderWidth: 1,
-                      padding: 10,
-                      height: 100,
-                      width: "95%",
+                <>
+                  <Modal
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                      Alert.alert("Modal has been closed.");
+                      setModalVisible(!modalVisible);
                     }}
-                    multiline
-                    numberOfLines={4}
-                    placeholder="New message"
-                    onChangeText={props.handleChange("message")}
-                    value={props.values.message}
-                    returnKeyType="done"
-                    blurOnSubmit={true}
-                    onSubmitEditing={() => {
-                      Keyboard.dismiss();
-                    }}
-                  />
-                  <Button
-                    disabled={!props.values.message}
-                    btnText={`Send`}
-                    onSubmit={props.handleSubmit}
-                    navigationHandler={undefined}
-                  />
-                </View>
+                  >
+                    <View style={styles.centeredView}>
+                      <View style={styles.modalView}>
+                        <StarRating />
+                        <Button
+                          btnText={"close"}
+                          onSubmit={() => setModalVisible(!modalVisible)}
+                          navigationHandler={undefined}
+                        />
+                      </View>
+                    </View>
+                  </Modal>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <TextInput
+                      style={{
+                        borderWidth: 1,
+                        padding: 10,
+                        height: 100,
+                        width: "95%",
+                        flex: 1,
+                      }}
+                      multiline
+                      numberOfLines={4}
+                      placeholder="New message"
+                      onChangeText={props.handleChange("message")}
+                      value={props.values.message}
+                      returnKeyType="done"
+                      blurOnSubmit={true}
+                      onSubmitEditing={() => {
+                        Keyboard.dismiss();
+                      }}
+                    />
+                    <View style={{ padding: 10 }}>
+                      <Button
+                        disabled={!props.values.message}
+                        btnText={`Send`}
+                        onSubmit={props.handleSubmit}
+                        navigationHandler={undefined}
+                      />
+                    </View>
+                  </View>
+
+                  {user.displayName === message.ownerName && (
+                    <View>
+                      <Button
+                        btnText={`Mark as swapped with ${message.username}`}
+                        onSubmit={() => setModalVisible(!modalVisible)}
+                        navigationHandler={undefined}
+                      />
+                    </View>
+                  )}
+                </>
               )}
             </Formik>
           </View>
@@ -180,8 +230,8 @@ var styles = StyleSheet.create({
     backgroundColor: "#ddd",
   },
   itemImg: {
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100,
     resizeMode: "cover",
   },
   itemDetail: {
@@ -203,6 +253,47 @@ var styles = StyleSheet.create({
   Form: {
     fontSize: 18,
     fontWeight: "500",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
 

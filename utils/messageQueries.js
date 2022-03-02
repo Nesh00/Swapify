@@ -8,21 +8,6 @@ import {
 } from "firebase/firestore";
 import { database, messageColRef } from "../firebase";
 
-// export const getMyMessagesMyItems = (loggedInUser) => {
-//   const q = query(messageColRef, where("ownerName", "==", loggedInUser));
-//   return new Promise((resolve, reject) => {
-//     onSnapshot(q, (snapshot) => {
-//       let messagesFromDb = [];
-//       snapshot.docs.forEach((doc) => {
-//         messagesFromDb.push({ ...doc.data(), id: doc.id });
-//       });
-//       resolve(messagesFromDb);
-//     });
-//   }).then((messages) => {
-//     return messages;
-//   });
-// };
-
 export const getMyMessagesItems = async (loggedInUser, type) => {
   const q = query(messageColRef, where(type, "==", loggedInUser));
   const querySnapshot = await getDocs(q);
