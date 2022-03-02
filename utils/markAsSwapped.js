@@ -1,16 +1,16 @@
 import { database } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
-const markAsSwapped = async (id) => {
-  const docRef = doc(database, "items", id);
-  console.log(id, "id");
-  return await setDoc(
-    doc(docRef),
-    {
-      swapped: true,
-    },
-    { merge: true }
-  );
+const markAsSwapped = async (itemId, messageDocId) => {
+  const itemDocRef = doc(database, "items", itemId);
+  await updateDoc(itemDocRef, {
+    swapped: true,
+  });
+
+  const messageDocRef = doc(database, "messages", messageDocId);
+  await updateDoc(messageDocRef, {
+    swapped: true,
+  });
 };
 
 export default markAsSwapped;

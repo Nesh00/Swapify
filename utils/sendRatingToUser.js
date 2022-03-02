@@ -3,10 +3,7 @@ import { query, where, updateDoc, doc } from "firebase/firestore";
 import { usersColRef, database } from "../firebase";
 
 const sendRatingToUser = (rating, username) => {
-  console.log(username, "username");
-
   let q = query(usersColRef, where("username", "==", username));
-  console.log("here", "hello");
   return new Promise((resolve, reject) => {
     onSnapshot(q, (snapshot) => {
       let userFromDb = [];

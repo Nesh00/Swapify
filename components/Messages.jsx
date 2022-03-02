@@ -50,7 +50,7 @@ const Messages = ({ route }) => {
     }
   }, [messageDocId, item]);
   const scrollRef = useRef(null);
-  // console.log(item);
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -59,7 +59,11 @@ const Messages = ({ route }) => {
       <View style={styles.container}>
         {message?.item?.username && (
           <TouchableOpacity
-            onPress={() => navigation.navigate("Item", { ...message.item })}
+            onPress={() => {
+              const item = { ...message.item };
+              item.swapped = !!message.swapped;
+              navigation.navigate("Item", item);
+            }}
           >
             <View>
               <View style={styles.itemCard}>
@@ -152,8 +156,7 @@ const Messages = ({ route }) => {
                         <Button
                           btnText={"Complete swap"}
                           onSubmit={() => {
-                            console.log(message.item.id, "message item id");
-                            markAsSwapped(message.item.id);
+                            markAsSwapped(message.item.id, messageDocId);
                             setModalVisible(!modalVisible);
                           }}
                           navigationHandler={undefined}
@@ -192,12 +195,23 @@ const Messages = ({ route }) => {
                   </View>
 
                   {user.displayName === message.ownerName && (
-                    <View>
-                      <Button
-                        btnText={`Swap with ${message.username}`}
-                        onSubmit={() => setModalVisible(!modalVisible)}
-                        navigationHandler={undefined}
-                      />
+                    <View style={{ alignItems: "center", paddingTop: 10 }}>
+                      {!message.swapped && (
+                        <Button
+                          btnText={
+                            !!message.swapped
+                              ? `Swapped with ${message.username}`
+                              : `Swap with ${message.username}`
+                          }
+                          onSubmit={() => setModalVisible(!modalVisible)}
+                          navigationHandler={undefined}
+                        />
+                      )}
+                      {!!message.swapped && (
+                        <Text style={{ fontSize: 20, fontWeight: "700" }}>
+                          Swap completed
+                        </Text>
+                      )}
                     </View>
                   )}
                 </>
