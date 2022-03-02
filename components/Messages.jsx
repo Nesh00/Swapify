@@ -23,6 +23,7 @@ import { useRef } from "react";
 import { isoDateFormatter } from "../utils/dateFormatter";
 import AverageStarRating from "./AverageStarRating";
 import StarRating from "./StarRatingForm";
+import markAsSwapped from "../utils/markAsSwapped";
 const now = new Date();
 
 const Messages = ({ route }) => {
@@ -49,7 +50,7 @@ const Messages = ({ route }) => {
     }
   }, [messageDocId, item]);
   const scrollRef = useRef(null);
-  console.log(item);
+  // console.log(item);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -149,8 +150,12 @@ const Messages = ({ route }) => {
                       <View style={styles.modalView}>
                         <StarRating />
                         <Button
-                          btnText={"close"}
-                          onSubmit={() => setModalVisible(!modalVisible)}
+                          btnText={"Completesdf swap"}
+                          onSubmit={() => {
+                            console.log(message.item.id, "message item id");
+                            markAsSwapped(message.item.id);
+                            setModalVisible(!modalVisible);
+                          }}
                           navigationHandler={undefined}
                         />
                       </View>
@@ -189,7 +194,7 @@ const Messages = ({ route }) => {
                   {user.displayName === message.ownerName && (
                     <View>
                       <Button
-                        btnText={`Mark as swapped with ${message.username}`}
+                        btnText={`Swap with ${message.username}`}
                         onSubmit={() => setModalVisible(!modalVisible)}
                         navigationHandler={undefined}
                       />
