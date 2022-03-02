@@ -60,11 +60,10 @@ const styles = StyleSheet.create({
   listContainer: {
     height: imageH,
     marginHorizontal: 10,
-    marginBottom: 40,
   },
   listHeader: {
-    marginBottom: 20,
-    fontSize: 15,
+    marginBottom: 10,
+    fontSize: 17,
   },
   itemCard: {
     position: 'relative',

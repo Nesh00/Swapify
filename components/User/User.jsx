@@ -11,7 +11,7 @@ import { SvgUri } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons, FontAwesome, Fontisto } from '@expo/vector-icons';
 import Button from '../Reusable/Button';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import { auth } from '../../firebase';
 import { deleteUser } from 'firebase/auth';
@@ -25,6 +25,7 @@ const menuH = menuW * 1;
 const User = () => {
   const navigation = useNavigation();
   const { loggedInUser, isLoggedIn } = useContext(UserContext);
+  const [loading, setLoading] = useState(false)
 
   const openCamera = () => {
     navigationHandler('Camera');
@@ -33,7 +34,7 @@ const User = () => {
   const navigationHandler = (screen) => {
     navigation.navigate(screen);
   };
-
+console.log(auth.currentUser)
   const deletePrompt = () => {
     Alert.alert(
       'Are you sure?',

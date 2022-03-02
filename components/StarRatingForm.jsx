@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
 import { TouchableOpacity } from "react-native";
+import sendRatingToUser from "../utils/sendRatingToUser";
 
-const StarRating = () => {
+const StarRatingForm = ({ username }) => {
   const [rating, setRating] = useState(0);
   const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
 
@@ -43,7 +44,9 @@ const StarRating = () => {
       <TouchableOpacity
         activeOpacity={0.7}
         style={styles.buttonStyle}
-        onPress={() => alert(rating)}
+        onPress={() => {
+          sendRatingToUser(rating, username), setRating(0);
+        }}
       >
         <Text>Submit Your Rating</Text>
       </TouchableOpacity>
@@ -80,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StarRating;
+export default StarRatingForm;

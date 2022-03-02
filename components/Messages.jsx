@@ -22,7 +22,7 @@ import { StyleSheet } from "react-native";
 import { useRef } from "react";
 import { isoDateFormatter } from "../utils/dateFormatter";
 import AverageStarRating from "./AverageStarRating";
-import StarRating from "./StarRatingForm";
+import StarRatingForm from "./StarRatingForm";
 import markAsSwapped from "../utils/markAsSwapped";
 const now = new Date();
 
@@ -148,9 +148,9 @@ const Messages = ({ route }) => {
                   >
                     <View style={styles.centeredView}>
                       <View style={styles.modalView}>
-                        <StarRating />
+                        <StarRatingForm username={message.username} />
                         <Button
-                          btnText={"Completesdf swap"}
+                          btnText={"Complete swap"}
                           onSubmit={() => {
                             console.log(message.item.id, "message item id");
                             markAsSwapped(message.item.id);
