@@ -2,6 +2,7 @@ import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from 'react-native';
 import Logo from './Logo';
 import ItemsSlider from './ItemsSlider';
 import StarRatingForm from '../StarRatingForm';
+
 const Home = () => {
   
   return (
@@ -10,7 +11,7 @@ const Home = () => {
         <StatusBar default />
         <Logo />
         <ItemsSlider />
-        <StarRatingForm />
+        <StarRatingForm username={'beanPinto'}/>
       </ScrollView>
     </SafeAreaView>
   );

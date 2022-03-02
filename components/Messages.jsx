@@ -33,6 +33,7 @@ const Messages = ({ route }) => {
   };
 
   useEffect(() => {
+    // console.log(message.item.username)
     if (messageDocId) {
       getMessage(messageDocId).then((messageDoc) => {
         messageDoc ? setMessage(messageDoc) : setMessage(newDoc);
@@ -142,6 +143,12 @@ const Messages = ({ route }) => {
                   <Button
                     disabled={!props.values.message}
                     btnText={`Send`}
+                    onSubmit={props.handleSubmit}
+                    navigationHandler={undefined}
+                  />
+                  <Button
+                    disabled={!props.values.message}
+                    btnText={`Rate your swap`}
                     onSubmit={props.handleSubmit}
                     navigationHandler={undefined}
                   />
