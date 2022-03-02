@@ -45,7 +45,7 @@ const StarRatingForm = ({ username }) => {
         activeOpacity={0.7}
         style={styles.buttonStyle}
         onPress={() => {
-          sendRatingToUser(rating, username), setRating(0);
+          sendRatingToUser(rating, username);
         }}
       >
         <Text>Submit Your Rating</Text>
